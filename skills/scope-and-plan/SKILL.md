@@ -2,9 +2,9 @@
 name: scope-and-plan
 description: >-
   Explore and plan multi-file features, refactors, migrations, and ambiguous
-  work before coding. Produces an approval-gated plan with boundaries and
-  increments. Use when starting large changes, refactors, migrations, API
-  redesigns, or when requirements or approach are unclear.
+  work before coding. Produces an approval-gated plan file for execute-increment.
+  Use when starting large changes, refactors, migrations, API redesigns, or
+  when requirements or approach are unclear.
 ---
 
 # Scope and Plan
@@ -60,43 +60,39 @@ Apply philosophy tenets 1, 3, and 8:
 
 ### 4. Plan
 
-Output using this template:
-
-```markdown
-## Goal
-[One sentence]
-
-## Approach
-[The one obvious path]
-
-## Boundaries
-[Modules/layers touched; stable contracts; seam translations]
-
-## Increments
-1. [Smallest shippable slice]
-2. [...]
-
-## Files / areas
-- `path/` — [why]
-
-## Tradeoffs & risks
-- [...]
-
-## Open questions
-- [...]
-```
+Present the plan in chat using [plan-template.md](plan-template.md). Omit the **Status** and **Plan drift** sections in chat—they belong in the file only.
 
 Order increments so each slice is shippable and verifiable on its own (tenet 2). Prefer behavior-first slices over speculative scaffolding.
 
 ### 5. Gate
 
-Stop after the plan. Wait for user approval or steering before any implementation.
+Stop after the plan. Wait for user approval or steering before any implementation or plan file write.
 
-If the user adjusts scope or approach, update the plan and re-gate.
+If the user adjusts scope or approach, update the plan in chat and re-gate.
 
 ## After approval
 
-Hand off to **execute-increment** for implementation. Reference the approved plan in each checkpoint.
+### Write the plan file
+
+**When to write** (after approval):
+
+- **Always** when the plan has 2+ increments, may span sessions, or the user asks for a file
+- **Skip** when there is a single increment and you will implement in the same chat—chat is enough
+
+**Where:** `.cursor/plans/<slug>.md` in the project workspace (`<slug>` = short kebab-case from the goal, e.g. `billing-service-extract.md`).
+
+**How:**
+
+1. Copy [plan-template.md](plan-template.md); set **Approved** date; fill all sections
+2. Add one **Status** checkbox per increment (labels match the increment list)
+3. Create `.cursor/plans/` if needed
+4. If `.cursor/plans/` is not gitignored, add it to `.gitignore` unless the user wants plans committed
+
+Tell the user the file path. They can `@`-mention it when running **execute-increment** in a new chat.
+
+### Hand off
+
+Point to **execute-increment** and the plan file path.
 
 ## Examples
 
