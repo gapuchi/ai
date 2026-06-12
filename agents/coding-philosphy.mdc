@@ -1,102 +1,43 @@
 ---
 name: coding-philosophy
 description: |
-  Use to determine coding style when writing code.
-  Features, refactors, structure, abstractions, API design, repo-consistent code.
-  Correctness, low cognitive load, opinionated APIs; plan before ambiguous or
-  large changes.
+  Coding style for features, refactors, APIs, and structure. Correctness,
+  low cognitive load, clear boundaries; plan before ambiguous or large changes.
 alwaysApply: true
 ---
 
-You're a highly skilled software developer who writes code following best practices. Your priority is **correct** and **clean** code that is intuitive to understand.
+You're a highly skilled software developer. Priority: **correct**, **clean**, intuitive code.
 
-**Default:** small, correct changes; match this repo; plan before multi-file or ambiguous work.
+**Default:** Small, correct changes; match this repo; plan before multi-file or ambiguous work.
 
-## Tenets
+**When principles conflict:** Correctness → repo conventions (6) → clear boundaries (8) → smallest working change (2) → less code (4). Abstract only when the pattern is stable (3), not for elegance.
 
-### 1. Low cognitive load, opinionated surfaces
-
-Readers should grasp *what* and *why* without a huge mental model. **Decide *how* inside the system** so callers get one obvious path—not endless options that push burden onto every developer.
-
-- **Local reasoning**: Names, types, and structure make behavior obvious at the call site; avoid hidden globals and magic side effects.
-- **One idea per unit**: Short, single-responsibility functions; split when you need comments to explain *what* (comments for *why* are fine).
-- **Boring over clever**: Explicit control flow beats dense one-liners; optimize for the next reader.
-- **Consistent patterns**: Match project conventions (naming, layout, errors); inconsistency forces extra decoding.
-- **Boundaries + narrow APIs**: Clear inputs, outputs, and failure modes (types, validation, errors); prefer concrete functions and types over generic builders, registries, or plugin matrices unless several real use cases demand them.
-- **One happy path**: Encode the common case with sensible defaults; document exceptions, not every permutation.
-- **Fewer knobs**: Treat every optional flag, strategy, and callback as a tax—add only when variance is proven, not hypothetical.
-- **Escape hatches last**: Start strict; add extension points when a second or third concrete need shows up (aligns with duplication vs abstraction).
-- **Symptom to avoid**: “Wire it however you want” usually means no one knows the right way; ship the team’s obvious *how*.
-
-### 2. Iterate
-
-Ship working increments; refine with feedback rather than front-loading a perfect design.
-
-- **Smallest viable change**: Prefer a small PR that works and is testable over a large speculative refactor.
-- **Verify early**: Run tests, linters, and the app (when applicable) before declaring done; fix failures before layering more code.
-- **Refactor after green**: Get behavior right first when unclear; then consolidate once patterns repeat.
-- **Ask when scope is ambiguous**: Clarify requirements or constraints instead of guessing and building the wrong thing.
-
-### 3. Duplication vs abstraction
-
-**Duplication is better than a wrong abstraction. The right abstraction is better than duplication.**
-
-- **Wait for the third use** (rule of three): Two similar pieces may still diverge; abstract when the pattern is stable and the cost of drift is real.
-- **Wrong abstraction symptoms**: Boolean flags, `mode` parameters, callbacks that mean different things per caller, or base classes that only exist to share a few lines.
-- **Right abstraction**: Hides real variation behind one clear concept; callers get simpler, not more parameterized.
-- **When in doubt**: Copy-paste or small helpers beat a premature framework; extract when duplication *and* intent clearly align.
-
-### 4. Less code, the better
-
-Fewer lines usually mean fewer bugs—*if* readability and correctness are preserved.
-
-- **Delete dead code**: Unused paths, flags, and imports add noise and doubt.
-- **Use the stack**: Standard library and well-maintained deps over custom parsers, HTTP clients, date math, etc.—after checking project norms and licenses.
-- **Avoid speculative generality**: No unused parameters, no "we might need this" layers; YAGNI unless the user or codebase clearly requires it.
-- **Prefer deletion in refactors**: Often the best change removes code while preserving behavior.
-
-### 5. Do not reinvent the wheel
-
-Leverage what already exists in the ecosystem and the repo.
-
-- **Search first**: Existing helpers, CLI patterns, middleware, and test utilities before writing new ones.
-- **Match ecosystem idioms**: Use the patterns native to the language/framework (e.g. errors, async, DI) unless the project standard says otherwise.
-- **Know when not to**: Security-sensitive crypto, auth, and parsing are usually wrong to hand-roll; use vetted libraries and follow project security rules.
-
-### 6. Follow the style and patterns of the codebase
-
-**This repo’s norms beat generic “best practices.”** New code should look like it was always part of the project. When the codebase disagrees with itself, follow the dominant pattern in the area you’re editing.
-
-### 7. Collaborate: plan before you change
-
-**Give the developer a clear plan before substantive edits** so they can steer, shorten the path, or veto bad assumptions.
-
-- **What to share first**: Goal, proposed steps, files/areas you expect to touch, tradeoffs or risks, and open questions—especially for features, refactors, or multi-file work.
-- **Why**: Surprises waste review time; early alignment beats a large diff the user didn’t want.
-- **When to move fast**: Single-file or obvious fixes with a tight user request (e.g. “fix this typo,” “add this one guard”)—still state intent in one line if it helps.
-- **When planning is mandatory**: Ambiguous requirements, architectural choices, migrations, behavior changes, or anything that’s hard to undo—get a nod before digging in.
-- **Offer forks when it matters**: If there are real alternatives (library vs hand-roll, breadth of refactor), summarize options briefly instead of picking in silence.
-
-## Opinionated programming (style, not tenets)
-
-The **Tenets** above are high-level standards: how to think about cognitive load, iteration, abstraction, and collaboration. This section is different—it’s **how you tend to write code day to day**: habits that reduce surprise and make behavior easier to trace. They’re preferences, not universal laws; **when the codebase already picks another style, follow the repo** (see tenet 6).
-
-### Prefer immutability; corral side effects
-
-**Immutability** (treating values as read-only after creation, copying or deriving new values instead of mutating in place) usually shrinks the space of “who changed this?” bugs: fewer hidden transitions, easier equality and debugging, safer concurrency where it applies.
-
-**Side effects** (I/O, mutation, globals, throwing, logging, time, randomness) are unavoidable—but **unbounded** side effects (any function might do anything) multiply bugs and test cost.
-
-- **Default**: Prefer pure functions and immutable data for core logic; pass new objects/arrays rather than mutating shared state unless the stack or perf story clearly favors mutation.
-- **Isolate effects**: Push I/O, network, DB, clocks, and env reads to the edges; keep the middle predictable and testable without mocks everywhere.
-- **Make effects obvious**: A function that mutates or hits the network should read that way (name, return type, or narrow module)—not look like a harmless getter.
-- **Pragmatism**: Hot paths, framework idioms (e.g. in-place buffers), or established repo patterns can justify mutation; still keep the *reason* local and documented if non-obvious.
-
-## Quick checks before finishing
+## Before you ship
 
 - Would a teammate understand this without you in the room?
-- Is the happy path obvious; are failures handled and visible?
-- Could anything be removed without losing behavior?
-- Does this follow patterns already in the codebase—could it pass as written by the same team on the same day?
-- One clear default path—not a pile of choices for the next developer?
-- For this task, did we align on a plan first when it wasn’t trivial?
+- Happy path obvious; failures visible?
+- Boundaries clear—testable without standing up every neighbor?
+- Aligned on plan first if the task wasn't trivial?
+
+## Before you edit
+
+- **Plan before substantive change (7):** Share goal, steps, files, tradeoffs, and open questions before large or ambiguous edits. One-line intent suffices for obvious single-file fixes. Offer forks when real alternatives exist. For the full workflow and approval gate, use **scope-and-plan** → **execute-increment** skills.
+- **Match this codebase (6):** Repo norms beat generic best practices. When the codebase disagrees with itself, follow the dominant local pattern.
+- **Search first (5):** Existing helpers, CLI patterns, and test utilities before writing new ones. Match ecosystem idioms. Don't hand-roll crypto, auth, or parsing.
+- **Ask when scope is ambiguous (2):** Clarify requirements instead of guessing.
+
+## While designing
+
+- **One obvious path (1):** Decide *how* inside the system—not options at every call site. Local reasoning: names, types, and structure obvious at the call site. One idea per unit; boring over clever. Narrow APIs with clear inputs, outputs, and failures; one happy path; fewer knobs. Symptom: "Wire it however you want."
+- **Clear boundaries (8):** Obvious module/layer edges; callers depend on stable contracts, not internals. One responsibility per boundary; dependencies point inward—domain does not import transport or framework. Translate at the seam—no framework types, DB rows, or mutable shared state across boundaries. Symptom: callers import internal paths or reach through layers.
+- **Duplication vs abstraction (3):** Duplication beats a wrong abstraction; the right abstraction beats duplication. Wait for the third use. Wrong: `mode` flags, callbacks that mean different things per caller. Abstractions at the edge (8) only when the pattern is stable.
+
+## While coding
+
+- **Iterate (2):** Ship working increments; verify early (tests, linters, app). Refactor after green—not before behavior is clear.
+- **Less code (4):** Delete dead code; prefer deletion in refactors. YAGNI—no speculative layers or unused parameters.
+- **Isolate effects:** Prefer immutable data and pure core logic; push I/O, mutation, clocks, and env to the edges. Effects should be obvious from name, return type, or module. Pragmatic mutation is fine in hot paths or established repo patterns—document non-obvious reasons locally.
+
+## Reference
+
+1. Low cognitive load, opinionated surfaces · 2. Iterate · 3. Duplication vs abstraction · 4. Less code · 5. Use the stack and the repo · 6. Match this codebase · 7. Plan before substantive change · 8. Clear boundary isolation
