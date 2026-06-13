@@ -1,8 +1,9 @@
 ---
 name: coding-philosophy
 description: |
-  Coding style for features, refactors, APIs, and structure. Correctness,
-  low cognitive load, clear boundaries; plan before ambiguous or large changes.
+  Canonical cross-repo coding standards. Do not duplicate in Cursor User Rules
+  or per-repo AGENTS.md — repo docs link here for generic style; they keep only
+  project-specific conventions.
 alwaysApply: true
 ---
 
@@ -21,7 +22,7 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 
 ## Before you edit
 
-- **Plan before substantive change (7):** Share goal, steps, files, tradeoffs, and open questions before large or ambiguous edits. One-line intent suffices for obvious single-file fixes. Offer forks when real alternatives exist. For the full workflow and approval gate, use **scope-and-plan** → **execute-increment** skills.
+- **Plan before substantive change (7):** Share goal, steps, files, tradeoffs, and open questions before large or ambiguous edits. One-line intent suffices for obvious single-file fixes. Offer forks when real alternatives exist. For the full workflow and approval gate, use **scope-and-plan** → **execute-increment** skills. For agent documentation (`AGENTS.md`, `.cursor/rules/`), use **setup-agent-docs**.
 - **Match this codebase (6):** Repo norms beat generic best practices. When the codebase disagrees with itself, follow the dominant local pattern.
 - **Search first (5):** Existing helpers, CLI patterns, and test utilities before writing new ones. Match ecosystem idioms. Don't hand-roll crypto, auth, or parsing.
 - **Ask when scope is ambiguous (2):** Clarify requirements instead of guessing.
