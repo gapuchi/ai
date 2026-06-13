@@ -35,6 +35,7 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 ## While coding
 
 - **Iterate (2):** Ship working increments; verify early (tests, linters, app). Refactor after green—not before behavior is clear.
+- **Idiomatic and lean (5):** Write like a strong practitioner of *this* language and stack—standard library first, native types and control flow, conventions the ecosystem expects. Then strip to the smallest clear version: no ceremony, no speculative helpers, no patterns that don't pay for themselves at this call site. Symptom: correct but reads like Java in Python, or "enterprise" when a plain function would do.
 - **Less code (4):** Delete dead code; prefer deletion in refactors. YAGNI—no speculative layers or unused parameters.
 - **Isolate effects:** Prefer immutable data and pure core logic; push I/O, mutation, clocks, and env to the edges. Effects should be obvious from name, return type, or module. Pragmatic mutation is fine in hot paths or established repo patterns—document non-obvious reasons locally.
 
