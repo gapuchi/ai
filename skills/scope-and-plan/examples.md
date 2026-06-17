@@ -19,6 +19,11 @@ Path: `.cursor/plans/billing-service-extract.md`
 
 Move billing calculation out of HTTP handlers into a testable domain module.
 
+## Architectural decisions
+
+1. Boundary placement — chose in-process `internal/billing/` module over a standalone service. Same process keeps ops cost flat; the seam is the value, not the network hop.
+2. Migration shape — chose extract-then-test over rewrite-with-tests. Behavior-unchanged first slice is easiest to review.
+
 ## Approach
 
 Add `BillingService` with the existing calculation logic unchanged; handlers call one method and map errors at the seam.

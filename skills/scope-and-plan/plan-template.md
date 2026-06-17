@@ -12,9 +12,14 @@
 
 [One sentence]
 
+## Architectural decisions
+
+1. [Decision] — chose [option]. [One-line why.]
+2. ...
+
 ## Approach
 
-[The one obvious path]
+[The one obvious path, given the decisions above]
 
 ## Boundaries
 
