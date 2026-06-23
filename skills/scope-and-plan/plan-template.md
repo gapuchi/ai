@@ -4,9 +4,9 @@
 
 ## Status
 
-- [ ] Increment 1: [short label matching increment below]
-- [ ] Increment 2: [short label]
-- [ ] Increment 3: [short label]
+- [ ] PR 1: [short label matching increment 1 below]
+- [ ] PR 2: [short label]
+- [ ] PR 3: [short label]
 
 ## Goal
 
@@ -17,22 +17,41 @@
 1. [Decision] — chose [option]. [One-line why.]
 2. ...
 
+## Design decisions
+
+1. [Decision] — chose [option]. [One-line why.] [Touches: existing code reshaped/extracted, if any]
+2. ...
+
 ## Approach
 
 [The one obvious path, given the decisions above]
 
 ## Boundaries
 
-[Modules/layers touched; stable contracts; seam translations]
+[Modules/layers touched; stable contracts; seam translations—no file paths]
+
+## Diagram
+
+```mermaid
+flowchart TB
+  subgraph layer_a ["Layer A (PR 1)"]
+    A[Component]
+  end
+  subgraph layer_b ["Layer B (PR 2)"]
+    B[Component]
+  end
+  A -->|"contract"| B
+```
+
+[One-sentence caption if the diagram needs context]
 
 ## Increments
 
-1. [Smallest shippable slice]
-2. [...]
+One increment = one PR, bottom-up merge order. Pure refactors lead so they merge with zero behavior risk.
 
-## Files / areas
-
-- `path/` — [why]
+1. **PR 1:** [Smallest shippable slice]
+2. **PR 2:** [...]
+3. **PR 3:** [...]
 
 ## Tradeoffs & risks
 

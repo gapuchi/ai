@@ -17,13 +17,13 @@ Follow `@agents/coding-philosphy.mdc` for all coding decisions. This skill adds 
 
 At the start of every session, load the approved plan before picking an increment:
 
-1. **Plan file given** — User `@`-mentions `.cursor/plans/<slug>.md` or gives a path → read it
-2. **No path given** — List `.cursor/plans/` and use the plan that matches the task; if ambiguous, ask
-3. **No file, chat-only plan** — Use the approved plan from the current chat (single-increment, same-session work only)
+1. **Plan file given** — User `@`-mentions a plan file or gives a path → read it
+2. **No path given** — Use the approved plan from the current chat if this session completed **scope-and-plan**; otherwise ask which plan file to use (or whether to run **scope-and-plan** again)
+3. **Ambiguous** — Ask; do not assume a default plans directory
 
 The **plan file is source of truth** over chat summaries when both exist.
 
-If the plan file is missing but the work needs 2+ increments or a new session, stop and run **scope-and-plan** to write one.
+If no plan exists in chat or on disk and the work needs 2+ PRs or a new session, stop and run **scope-and-plan** (or ask where the approved plan lives).
 
 ## Workflow
 
