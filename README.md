@@ -22,7 +22,9 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 
 | Topic | Location |
 |-------|----------|
-| Coding philosophy, boundaries, planning workflow | `agents/coding-philosophy.mdc` + `skills/scope-and-plan`, `execute-increment` |
+| Coding philosophy and boundaries | `agents/coding-philosphy.mdc` |
+| Planning workflow (gates, `plan.md`, PR stack) | `skills/scope-and-plan` |
+| Splitting an oversized commit into a Graphite stack | `skills/split-commit` |
 | **Bootstrapping repo agent docs** | `skills/setup-agent-docs` |
 | Repo architecture, domain model, where to edit | Each repo's `AGENTS.md` + `.cursor/rules/` |
 | User-facing behavior | Each repo's `README.md` |
@@ -31,16 +33,15 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 
 | Skill | Use when |
 |-------|----------|
-| `scope-and-plan` | Large or ambiguous work — plan before code |
-| `execute-increment` | Implement an approved plan one slice at a time |
+| `scope-and-plan` | Large or ambiguous work — plan and sequence PRs before code |
+| `split-commit` | One commit is too big — split into a reviewable Graphite stack |
 | `setup-agent-docs` | Create or audit `AGENTS.md` and `.cursor/rules/` for a repo |
-| `researcher` | External research during planning |
 
 ## Cursor User Rules (UI)
 
 **Keep in Cursor Settings → Rules:** git commit protocol, PR workflow (`gh`), communication style, "run commands yourself", conversation-history context.
 
-**Do not duplicate here or in User Rules** (already in `coding-philosophy.mdc`):
+**Do not duplicate here or in User Rules** (already in `agents/coding-philosphy.mdc`):
 
 - Minimize scope / small diffs
 - Avoid over-engineering / YAGNI
@@ -48,10 +49,10 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 - One idea per unit / useful tests only
 - Comment and abstraction guidance
 
-If those appear in both User Rules and `coding-philosophy.mdc`, remove them from User Rules.
+If those appear in both User Rules and `coding-philosphy.mdc`, remove them from User Rules.
 
 ## New repo checklist
 
 1. Run **`setup-agent-docs`** — explore, draft `AGENTS.md`, add `.cursor/rules/`
 2. Symlink this repo to `~/.cursor/rules` and `~/.cursor/skills` if not already done
-3. Keep `coding-philosophy` as the only cross-repo coding standard
+3. Keep `coding-philosphy.mdc` as the only cross-repo coding standard

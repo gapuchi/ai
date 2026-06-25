@@ -1,6 +1,6 @@
 # Plan: [short-slug]
 
-**Approved:** [date, set when user approves]
+**Approved:** [date, set at Plan approval]
 
 ## Status
 
@@ -10,57 +10,93 @@
 
 ## Goal
 
-[One sentence]
+[One sentence — framing]
 
 ## Architectural decisions
+
+[Gate B — settled choices only, no tier labels]
 
 1. [Decision] — chose [option]. [One-line why.]
 2. ...
 
 ## Design decisions
 
-1. [Decision] — chose [option]. [One-line why.] [Touches: existing code reshaped/extracted, if any]
+[Gate C]
+
+1. [Decision] — chose [option]. [One-line why.] [Touches: reshaped/extracted code, if any]
 2. ...
 
 ## Approach
 
-[The one obvious path, given the decisions above]
+[One obvious path]
 
 ## Boundaries
 
-[Modules/layers touched; stable contracts; seam translations—no file paths]
+[Modules/layers; contracts at seams]
+
+## Contracts
+
+[Plan approval — new or changed boundaries only; pseudocode OK]
+
+```
+Caller → Callee
+  input:  { ... }
+  output: { ... }
+  invariant: [ordering, errors, idempotency, …]
+```
+
+## Investigation
+
+[Anchor files, patterns to follow, gotchas from B/C exploration—not decisions]
+
+- `path/to/file` — [why it matters]
+- Pattern: [e.g. match existing X in Y]
 
 ## Diagram
 
+[Plan approval — boundaries and flow only; no PR labels]
+
 ```mermaid
 flowchart TB
-  subgraph layer_a ["Layer A (PR 1)"]
-    A[Component]
+  subgraph handlers ["handlers"]
+    H[HTTP handlers]
   end
-  subgraph layer_b ["Layer B (PR 2)"]
-    B[Component]
+  subgraph billing ["billing"]
+    BS[BillingService]
   end
-  A -->|"contract"| B
+  subgraph data ["existing"]
+    BR[(BillingRepository)]
+  end
+  H -->|"Calculate()"| BS
+  BS --> BR
 ```
 
-[One-sentence caption if the diagram needs context]
+[Caption if needed]
 
 ## Increments
 
-One increment = one PR, bottom-up merge order. Pure refactors lead so they merge with zero behavior risk.
+[Gate D — after Plan approval]
 
-1. **PR 1:** [Smallest shippable slice]
-2. **PR 2:** [...]
-3. **PR 3:** [...]
+One increment = one PR, bottom-up (build order + diff hygiene). Repeat per PR.
+
+### PR 1: [title]
+
+- **Story:** [what the reviewer verifies first]
+- **Edits:** [e.g. introduce, mechanical]
+- **Depends on:** [none, or "PR N merged — reason"]
+- **Acceptance:**
+  - [ ] [observable done criterion]
+- **Bridge:** [optional]
+- **Touch set:** [required when touching existing code — `path` → role]
 
 ## Tradeoffs & risks
 
-- [...]
+[Plan-level from P; append increment sequencing tradeoffs from D]
 
 ## Open questions
 
-- [...]
+[From Plan approval — tag **blocking** or **defer**]
 
 ## Plan drift
 
-[Notes from execute-increment checkpoints—or "none"]
+[Only when the approved plan changes—or "none"]

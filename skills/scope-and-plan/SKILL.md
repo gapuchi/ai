@@ -2,145 +2,158 @@
 name: scope-and-plan
 description: >-
   Explore and plan multi-file features, refactors, migrations, and ambiguous
-  work before coding. Produces an approval-gated plan for execute-increment.
-  Use when starting large changes, refactors, migrations, API redesigns, or
-  when requirements or approach are unclear.
+  work before coding. Produces an approval-gated, resumable plan (plan.md +
+  scratch.md) before implementation. Use when starting large changes,
+  refactors, migrations, API redesigns, or when requirements or approach are
+  unclear.
 ---
 
 # Scope and Plan
 
-Follow `@agents/coding-philosphy.mdc` for all design decisions. This skill adds workflow and gates—it does not override the philosophy.
+Follow `@agents/coding-philosphy.mdc` for design decisions. This skill adds workflow and gates—it does not override the philosophy.
 
-**Hard rule:** Do not write or edit code until the user approves the final plan (Gate D).
+**Hard rule:** No code until **Plan** and **Gate D** are both approved (D assumes Plan is settled).
 
 ## When to use
 
 - Multi-file features, refactors, migrations, API or boundary changes
 - Ambiguous requirements or multiple valid approaches
-- User says "plan", "design", "how should we", or describes work too large for a one-line intent
+- User says "plan", "design", "how should we", or work too large for one-line intent
 
-For obvious single-file fixes, state one-line intent and proceed—no full plan needed (philosophy tenet 7).
-
-For external research or option comparison, read and follow [researcher](../researcher/SKILL.md) during Gate B or C.
+Obvious single-file fixes: state one-line intent and proceed (philosophy tenet 7).
 
 ## Workflow
 
-One subject, examined top-down. Each gate drops exactly one layer below the last and is settled before you descend, because each layer constrains the one beneath it. Don't skip a layer or jump ahead to detail.
+One subject, top-down. Each gate settles before the next descends.
 
 ```
-- [ ] A. Framing — opt-in      (top: goal, scope, success — what problem)
-- [ ] B. Architecture — required   (one below: components, boundaries, transport — what & where)
-- [ ] C. Design — required         (one below: abstractions, seams, contracts — what shape)
-- [ ] D. Increments — required     (bottom: ordered, refactor-first PR breakdown — how to build)
+- [ ] A. Framing — opt-in      (goal, scope, success)
+- [ ] B. Architecture — required   (components, boundaries, transport)
+- [ ] C. Design — required         (abstractions, seams, contracts)
+- [ ] P. Plan — required           (commit: decisions, boundaries, contracts, diagram)
+- [ ] D. Increments — required     (PR stack only — how to ship)
 ```
 
-Stop after each gate and wait for confirmation. On disagreement, redo that gate only; don't reopen earlier ones unless the upstream answer changed.
+| Gate | Wait when | Otherwise |
+|------|-----------|-----------|
+| A | Scope or success unclear | Skip if all clear (see A) |
+| B, C | Unresolved **Hard fork** | Objection window; see [Confirm (B and C)](#confirm-b-and-c) |
+| P | Always | — |
+| D | Always | — |
+
+Disagreement → redo that gate only; don't reopen earlier unless upstream changed.
+
+### Decision tiers
+
+Classify load-bearing decisions at B and C. **Multiple options ≠ fork**—only unresolved choices that matter.
+
+| Tier | Label | When | Gate behavior |
+|------|-------|------|---------------|
+| **Assumed** | _(none)_ | Framing, constraints, or repo convention bind the choice; cheap to reverse | Recommend + one-line why. Move on. |
+| **Soft fork** | **Soft fork** | Real alternatives; one clearly better; reversible if wrong | Recommend strongly; user can object. Does not block. |
+| **Hard fork** | **Hard fork** | Missing product intent; hard to undo; or near-parity tradeoff | **Block** until answered. |
+
+**Hard fork signals:** user-visible semantics, irreversibility, genuine tradeoff, missing constraint, request vs codebase conflict.
+
+**Assumed signals:** framing decided it, boring stack answer (tenet 5), dominant convention (tenet 6), implied preference ("minimal diff"), easy-to-move internal boundary.
+
+Collect several hard forks in a **Hard forks** subsection; if none, say once (e.g. _"No hard forks—all follow from framing or conventions."_).
+
+In the persisted plan file, record only **settled** choices—no tier labels.
 
 ### Gate A — Framing (opt-in)
 
-Skip only when scope, constraints, and success criteria are all clear from the request. "Implement X" requests usually hide scope—prefer running A.
+Skip only when scope, constraints, and success are all clear. "Implement X" usually isn't—prefer running A.
 
-Present: goal (one sentence), constraints, non-goals, success criteria, open questions.
-
-Confirm: _"Is this the right framing?"_
+Present: goal (one sentence), constraints, non-goals, success criteria, open questions. Confirm: _"Is this the right framing?"_
 
 ### Gate B — Architecture (required)
 
-Explore the repo first (tenets 5, 6): existing helpers, dominant local conventions, ownership (`CODEOWNERS` or repo equivalent).
+Explore the repo first (tenets 5, 6): helpers, conventions, ownership (`CODEOWNERS` or equivalent). Findings feed **Investigation** at Plan.
 
-Present a **numbered decision list**, one item per load-bearing choice (e.g. transport, data source, system boundary, trigger model). Order by dependency: if decision X constrains decision Y's options, put X first.
-
-For each decision:
-
-- **Options** considered
-- **Recommend** + one-line why
-
-**Forks** — only surface decisions that still need the user's call. Mark those items with **Fork** (or collect them in a short **Forks** subsection at the end). Do **not** append "Fork? yes/no" to every line; settled choices from framing or an earlier gate get a recommendation only, with no fork label. If nothing is open, say so once (e.g. "No forks—all recommendations follow from framing").
-
-Include open questions that could change a decision. Do **not** include file paths or increments yet.
-
-Confirm: _"Are these the right architectural decisions? Any forks to discuss?"_
+Numbered **decision list**—one load-bearing choice per item (transport, data source, boundary, trigger, …), dependency order. Per item: **Options**, **Recommend** + why, **Tier**. Open questions that could change a decision. No increments yet.
 
 ### Gate C — Design (required)
 
-B decided _what the moving parts are and where the boundaries go_. C decides _what shape the code takes_: which abstractions exist, what's generalized vs. left concrete, where the seams sit, and the contracts callers depend on. Too detailed for B, but they determine what the increments are—so they come before D. Making a flow provider-agnostic so multiple backends plug in is one example; so is any choice about interface shape, error/data model, sync vs. async, or what stays hard-coded.
+B: what and where. C: what shape—abstractions, seams, contracts (interface shape, error model, sync vs async, hard-coded vs pluggable). Same list shape as B. Per item, note **existing code touched** when a decision reshapes or extracts; reshapes feed D's ordering.
 
-Present a **numbered design-decision list**, same shape as Gate B (options + recommend; **Fork** only where the user must choose):
+### Confirm (B and C)
 
-- **Existing code touched** — what a decision reshapes or extracts, if any (feeds D's ordering)
+- **Hard forks:** _"Need your call on [list] before the plan."_ Wait.
+- **None:** objection window—B: _"Proceeding with these architectural decisions unless you object—any changes?"_ C: _"Proceeding with this design shape unless you object—ready to approve the plan?"_ Continue on silence or assent; user can correct Assumed or Soft items.
 
-Skip a decision only when the shape is obvious from B. When a decision reshapes existing code, flag that refactor here so D can sequence it first.
+**Batch:** No hard forks in either gate → present B then C in one message, single objection window at the end, then **Plan**.
 
-Confirm: _"Is this the right design shape? Any forks to discuss?"_
+### Plan approval (required)
+
+Commit to **what** you're building—not **how** it ships in PRs. Assemble from settled A–C ([plan-template.md](plan-template.md) through **Open questions**; omit **Status**, **Increments**, **Plan drift**).
+
+| Section | Content |
+|---------|---------|
+| Goal | From framing |
+| Architectural / design decisions | Settled B and C |
+| Approach | One obvious path |
+| Boundaries | Modules/layers; seams |
+| **Contracts** | New/changed boundaries: caller → callee, input/output, invariants (pseudocode OK) |
+| **Investigation** | Anchor files, patterns to follow, gotchas from exploration |
+| Diagram | See below |
+| Tradeoffs & risks | Design/architecture—not PR sequencing |
+| Open questions | Tag **blocking** or **defer** |
+
+**Diagram** (required unless trivial single-boundary work): one [mermaid](https://mermaid.js.org/) `flowchart` in a fenced block (no images). Module **boundaries** and main **flow** (label contracts when helpful). ~3–6 boxes per layer. **No PR labels.**
+
+Confirm: _"Approve this plan? Ready to sequence increments?"_
 
 ### Gate D — Increments (required)
 
-Now resolve detail. Present the full [plan-template.md](plan-template.md) content in chat; omit **Status** and **Plan drift** (file only).
+Turn the approved plan into an ordered PR stack—build bottom-up. Present **Increments** and increment-level tradeoffs only (append when persisting). Unsettled forks belong at B/C/P.
 
-- One obvious path per implementation choice—pick, don't fork (forks belong at Gate B/C)
-- **Diagram** — mermaid visualization of boundaries, flow, and which PR touches what (see below)
-- Boundaries (modules/layers and contracts—not a file list)
-- Tradeoffs and risks
+**One increment = one PR** in merge order—never group or split across increments. Sequence like [split-commit](../split-commit/SKILL.md): each PR is one review story; bottom introduces what later ones need; mechanical churn separate from behavior.
 
-This is the bottom layer: turn the settled design into an ordered build sequence. Planning descended top-down; the build runs bottom-up.
+**Two axes** (both must hold):
 
-**One increment = one PR.** The increments list is the PR stack: item _N_ is PR _N_, in merge order. Do not group multiple PRs into one increment or split one PR across increments. Name each item so it reads as a PR title/summary.
+1. **Build order** — types, modules, contracts before callers. Write-order, not a feature checklist or directory split.
+2. **Diff hygiene** — one change kind per PR. Peel rename/move before behavior; extract before wire; introduce shim before remove. Never refactor + new behavior together.
 
-Sequence rules:
+**Each increment:** Title, **Story**, **Edits**, **Depends on** (none or PR + reason), **Acceptance** (2–4 observable checkboxes), **Bridge** when needed. **Touch set** required when touching existing code (`path` → role); optional for greenfield-only. Interleaved rename + behavior → whole file to dominant PR.
 
-1. **One logical unit per PR** — each increment is independently shippable and reviewable; don't bundle unrelated work.
-2. **Bottom-up** — dependencies first, then their callers. The list should read as build order, not a feature checklist.
-3. **Refactor before feature** — split pure, behavior-preserving refactors into their own PR (and increment) before PRs that add behavior. Never mix refactor + new behavior in one PR.
+**Before approval:** _Authorship_ — next PR writable after merge? _Coverage_ — every C reshape has a home; no vague tail. _Granularity_ — split when review is muddy. _Existing stack_ — branch for open PR vs new bottom (see split-commit).
 
-Do **not** include a separate file list—the increments and boundaries sections carry enough scope; file paths belong in implementation, not the plan.
+### Implementability (before persisting)
 
-### Diagram (required at Gate D)
+Fix before writing files:
 
-Include a **## Diagram** section in the plan (after **Boundaries**, before **Increments**). Use a single [mermaid](https://mermaid.js.org/) diagram in a fenced `mermaid` code block—no image files.
+- No `TBD` / `figure out` in plan content
+- Every increment has **Acceptance**; every C "touches" item appears in a touch set
+- **Contracts** cover every new/changed boundary
+- Open questions tagged; nothing blocking left unnamed
 
-The diagram should make three things obvious at a glance:
-
-1. **Boundaries** — subgraphs or boxes per layer/module (not per file); stable seams between caller and callee.
-2. **Flow** — main read/write or request path for the feature (arrows labeled with the contract when it helps, e.g. `headCommitSha`, cereal route).
-3. **PR scope** — which PR changes which box. Prefer `PR 1` / `PR 2` labels on subgraphs, nodes, or edges; use dashed vs solid or a short legend only if needed.
-
-Keep it small enough to read in one screen (~3–6 boxes per layer). Skip only for trivial single-PR, single-boundary work.
-
-**Shapes that work well:**
-
-- `flowchart TB` with `subgraph` per boundary
-- Label new work vs unchanged with node text (`(existing)`, `(new in PR 2)`) or edge notes—not a separate inventory
-
-Do **not** duplicate the increments list in prose inside the diagram; the diagram complements **Boundaries** and **Increments**, not replaces them.
-
-Confirm: _"Approve this plan? Where should I persist it (if anywhere)?"_
+Confirm: _"Approve this increment stack?"_
 
 ## After approval
 
-The approved Gate D content in chat is valid on its own. **Do not** write a plan file unless the user asks to persist it and says where.
+### Persist (default for 2+ PRs)
 
-### Persisting the plan (optional)
+**Default:** write `docs/plans/{slug}/plan.md` and `docs/plans/{slug}/scratch.md` after D unless the user opts out (chat-only, same-session single-PR).
 
-**When to offer:** plan has 2+ PRs, may span sessions, or the user wants a durable artifact. Skip for single-PR work done in the same chat unless they ask.
+1. Confirm path or accept default `{slug}` from goal (kebab-case)
+2. Copy [plan-template.md](plan-template.md) → `plan.md`; set **Approved**, **Status** from increments, full P + D content
+3. Copy [scratch-template.md](scratch-template.md) → `scratch.md`; set **PR** to 1 of N, not started
+4. Tell user both paths for `@`-mention
 
-**Ask** where to save it—for example:
-
-- Chat only (no file; fine for same-session, single-PR work)
-- A path in the repo (e.g. `docs/plans/`, `internal-docs/`, next to the feature)
-- Somewhere else the user names (Notion, ticket, wiki)
-
-**If they want a file:**
-
-1. Use the path they give; suggest a kebab-case filename from the goal (e.g. `origin-pr-mark-as-viewed.md`) only as a suggestion
-2. Copy [plan-template.md](plan-template.md); set **Approved** date; include **Status** and **Plan drift** sections
-3. Fill all sections from the approved Gate D (decisions, diagram, increments, etc.)
-4. Write only after they confirm the path
-
-Tell them the final path so they can `@`-mention it for **execute-increment**.
+**Chat-only OK when:** single PR, same session, user declines persist.
 
 ### Hand off
 
-Point to **execute-increment**. Remind them how to load the plan: `@` the saved file, paste the path, or continue in chat if no file was written.
+Implementation may begin after D. Entry point: `@` `plan.md` (and `scratch.md` when persisted).
+
+### Resuming implementation
+
+1. Read `plan.md` — Goal, Contracts, Investigation, then **current** increment block
+2. Read `scratch.md` — Current, Stack
+3. `git status` / `gt ls` (or equivalent)
+4. Implement **one PR** at a time; update **scratch** when starting/finishing; check **Status** in plan when a PR merges
+5. **Plan drift** only when the approved plan itself changes—not for routine progress
 
 ## Examples
 
