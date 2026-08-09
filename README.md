@@ -23,6 +23,7 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 | Topic | Location |
 |-------|----------|
 | Coding philosophy and boundaries | `agents/coding-philosphy.mdc` |
+| Development environment and Nix preferences | `agents/development-environment.mdc` |
 | Planning workflow (gates, `plan.md`, PR stack) | `skills/scope-and-plan` |
 | Splitting an oversized commit into a Graphite stack | `skills/split-commit` |
 | **Bootstrapping repo agent docs** | `skills/setup-agent-docs` |

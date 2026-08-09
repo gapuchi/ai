@@ -1,0 +1,23 @@
+---
+description: Cross-repository development environment and dependency policy
+alwaysApply: true
+---
+
+# Development environment
+
+Prefer declarative, reproducible development environments using Nix flakes.
+
+- Follow the repository's documented development workflow and task entrypoints.
+- When a Nix environment exists, use it and declare missing development tools in
+  its existing Nix configuration.
+- Prefer direnv with nix-direnv for automatic Nix environment activation. When a
+  repository has a flake, use or add an `.envrc` containing `use flake`. Use
+  `nix develop -c <command>` when automatic activation is unavailable.
+- Use Nix for language runtimes, compilers, and development tools. Use the
+  ecosystem package manager for repository-local libraries and packages.
+- Preserve committed lockfiles such as `flake.lock`, `Cargo.lock`, and
+  `package-lock.json`; update them intentionally.
+- Do not perform ad hoc global or system-level installations. Shared machine
+  tools must be declared through the machine's Nix configuration.
+- If no development environment is declared, ask before introducing Nix or
+  making system-level changes.
