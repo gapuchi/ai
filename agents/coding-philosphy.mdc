@@ -22,7 +22,7 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 
 ## Before you edit
 
-- **Plan before substantive change (7):** Share goal, steps, files, tradeoffs, and open questions before large or ambiguous edits. One-line intent suffices for obvious single-file fixes. Offer forks when real alternatives exist. For the full workflow and approval gate, use **ted-mosby** → **execute-increment** skills. For agent documentation (`AGENTS.md`, `.cursor/rules/`), use **setup-agent-docs**.
+- **Plan before substantive change (7):** Share goal, steps, files, tradeoffs, and open questions before large or ambiguous edits. One-line intent suffices for obvious single-file fixes. Offer forks when real alternatives exist. For agent documentation (`AGENTS.md`, `.cursor/rules/`), use **setup-agent-docs**.
 - **Match this codebase (6):** Repo norms beat generic best practices. When the codebase disagrees with itself, follow the dominant local pattern.
 - **Search first (5):** Existing helpers, CLI patterns, and test utilities before writing new ones. Match ecosystem idioms. Don't hand-roll crypto, auth, or parsing.
 - **Ask when scope is ambiguous (2):** Clarify requirements instead of guessing.
@@ -30,6 +30,7 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 ## While designing
 
 - **One obvious path (1):** Decide *how* inside the system—not options at every call site. Local reasoning: names, types, and structure obvious at the call site. One idea per unit; boring over clever. Narrow APIs with clear inputs, outputs, and failures; one happy path; fewer knobs. Symptom: "Wire it however you want."
+- **One home per concern (1):** Optimize for global navigability, not only locally clean boundaries. Give each class of behavior one canonical owner and execution path. Do not split equivalent business logic or data access across the client, server, database functions, and vendor services merely because each case is locally convenient. If an exception is necessary, define the simple rule that tells teammates where to look.
 - **Clear boundaries (8):** Obvious module/layer edges; callers depend on stable contracts, not internals. One responsibility per boundary; dependencies point inward—domain does not import transport or framework. Translate at the seam—no framework types, DB rows, or mutable shared state across boundaries. Symptom: callers import internal paths or reach through layers.
 - **Duplication vs abstraction (3):** Duplication beats a wrong abstraction; the right abstraction beats duplication. Wait for the third use. Wrong: `mode` flags, callbacks that mean different things per caller. Abstractions at the edge (8) only when the pattern is stable.
 

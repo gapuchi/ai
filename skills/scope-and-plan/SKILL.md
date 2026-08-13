@@ -73,6 +73,8 @@ Explore the repo first (tenets 5, 6): helpers, conventions, ownership (`CODEOWNE
 
 Numbered **decision list**—one load-bearing choice per item (transport, data source, boundary, trigger, …), dependency order. Per item: **Options**, **Recommend** + why, **Tier**. Open questions that could change a decision. No increments yet.
 
+For each concern, name its canonical owner and entry point. Treat multiple execution paths for equivalent behavior as an architectural fork: justify them with a stable rule that tells teammates where to look, or prefer one path. Local convenience alone does not justify splitting behavior across client, server, database functions, or vendor services.
+
 ### Gate C — Design (required)
 
 B: what and where. C: what shape—abstractions, seams, contracts (interface shape, error model, sync vs async, hard-coded vs pluggable). Same list shape as B. Per item, note **existing code touched** when a decision reshapes or extracts; reshapes feed D's ordering.
