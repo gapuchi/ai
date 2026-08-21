@@ -32,7 +32,7 @@ For large refactors of the codebase itself, run **scope-and-plan** first; use th
 | **User** | `workspace/ai` — `coding-philosophy.mdc`, workflow skills | Cross-repo style, planning workflow, git/PR protocol | Repo architecture, domain model |
 | **Repo canonical** | `AGENTS.md` | Layer concepts, domain rules, opinionated patterns, task routing, anti-patterns | File trees, function catalogs, generic coding advice, user setup |
 | **Repo scoped** | `.cursor/rules/*.mdc` | Edit-time detail for matching globs; thin `architecture.mdc` pointer | Full architecture essay (that's `AGENTS.md`) |
-| **Repo procedures** | `.cursor/skills/` in the repo | Multi-step workflows (add-league, migrations) | Architecture, invariants |
+| **Repo procedures** | `.cursor/skills/` in the repo | Multi-step workflows (onboarding a resource, migrations) | Architecture, invariants |
 | **Deep dive** | e.g. `src/db/README.md` | Schema, ER diagrams, entity relationships | Command behavior, layer boundaries |
 | **User-facing** | `README.md` + command docstrings | Setup, env vars, behavior users and operators see | Architecture, agent conventions |
 
@@ -203,8 +203,7 @@ A solid doc set for a layered app often looks like:
 - **Entry points** — one named helper per seam (`api_client()`, `default_for_scope()`, etc.)
 - **Rules** — thin `architecture.mdc` plus glob rules (`api-layer`, `db-layer`, `readme-sync`)
 - **Deep dive** — schema README (or equivalent) when detail would bloat `AGENTS.md`
-
-Example: [gapuchi/league-bot](https://github.com/gapuchi/league-bot) — League dispatch, `soccer_poll`, thin `architecture.mdc`, glob rules, `add-league` skill.
+- **Skills** — repo procedures for multi-step workflows; `AGENTS.md` links to them instead of inlining steps
 
 If the repo does not yet match this pattern, use step 2 forks — do not shrink the philosophy to fit the code in `AGENTS.md`.
 
