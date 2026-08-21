@@ -2,12 +2,14 @@
 
 Copy and replace placeholders. Delete sections that don't apply. Link `coding-philosophy`—do not restate it.
 
+Before writing: each section must pass "What would an agent do wrong without this?" Link skills and glob rules for everything else.
+
 ```markdown
 # Agent guide
 
 ## Related docs
 
-- **Cross-repo** — `coding-philosophy` rule; `scope-and-plan` / `execute-increment` skills (`workspace/ai`)
+- **Cross-repo** — `coding-philosophy` rule; `scope-and-plan` skill (`workspace/ai`)
 - [`<deep-dive path>`](<path>) — <what it covers, e.g. schema>
 - [`.cursor/rules/`](.cursor/rules/) — scoped reminders (`architecture`, `<layer-rules>`, `readme-sync`)
 
@@ -49,6 +51,12 @@ New behavior: use case first → adapter → registry (router, command list, etc
 - Stable key: `<id>` for <what entities>
 - Do not hardcode <ids>
 - <Other rules agents violate without docs>
+
+## <Domain area with shared vs variant behavior> (optional)
+
+<One paragraph: when behavior is shared vs variant. Decision question agents must ask.>
+
+Procedure: `<skill>` or `<glob rule>`. Do not list modules here.
 
 ## Key patterns
 
