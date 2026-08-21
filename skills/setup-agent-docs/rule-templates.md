@@ -86,6 +86,7 @@ Add a scoped rule when:
 - Agents repeatedly put logic in the wrong layer for that path
 - Edit-time reminders need function-level detail (api vs domain split)
 - The detail would bloat `AGENTS.md` but is stable
+- Stable edit-time decision rules (e.g. "use macro only when schema matches X") belong in glob rules, not `AGENTS.md` common tasks
 
 Skip when:
 

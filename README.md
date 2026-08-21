@@ -14,7 +14,7 @@ ln -sfn "$(pwd)/skills" "$HOME/.cursor/skills"
 ### Claude Code
 
 ```zsh
-ln -sfn "$(pwd)/agents/coding-philosphy.mdc" "$HOME/.claude/CLAUDE.md"
+ln -sfn "$(pwd)/agents/coding-philosophy.mdc" "$HOME/.claude/CLAUDE.md"
 ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 ```
 
@@ -22,11 +22,12 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 
 | Topic | Location |
 |-------|----------|
-| Coding philosophy and boundaries | `agents/coding-philosphy.mdc` |
+| Coding philosophy and boundaries | `agents/coding-philosophy.mdc` |
 | Development environment and Nix preferences | `agents/development-environment.mdc` |
 | Planning workflow (gates, `plan.md`, PR stack) | `skills/scope-and-plan` |
 | Splitting an oversized commit into a Graphite stack | `skills/split-commit` |
 | **Bootstrapping repo agent docs** | `skills/setup-agent-docs` |
+| Repo procedures | `.cursor/skills/` in each repo |
 | Repo architecture, domain model, where to edit | Each repo's `AGENTS.md` + `.cursor/rules/` |
 | User-facing behavior | Each repo's `README.md` |
 
@@ -42,7 +43,7 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 
 **Keep in Cursor Settings → Rules:** git commit protocol, PR workflow (`gh`), communication style, "run commands yourself", conversation-history context.
 
-**Do not duplicate here or in User Rules** (already in `agents/coding-philosphy.mdc`):
+**Do not duplicate here or in User Rules** (already in `agents/coding-philosophy.mdc`):
 
 - Minimize scope / small diffs
 - Avoid over-engineering / YAGNI
@@ -50,10 +51,10 @@ ln -sfn "$(pwd)/skills" "$HOME/.claude/skills"
 - One idea per unit / useful tests only
 - Comment and abstraction guidance
 
-If those appear in both User Rules and `coding-philosphy.mdc`, remove them from User Rules.
+If those appear in both User Rules and `coding-philosophy.mdc`, remove them from User Rules.
 
 ## New repo checklist
 
 1. Run **`setup-agent-docs`** — explore, draft `AGENTS.md`, add `.cursor/rules/`
 2. Symlink this repo to `~/.cursor/rules` and `~/.cursor/skills` if not already done
-3. Keep `coding-philosphy.mdc` as the only cross-repo coding standard
+3. Keep `coding-philosophy.mdc` as the only cross-repo coding standard

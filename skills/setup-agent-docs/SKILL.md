@@ -9,7 +9,7 @@ description: >-
 
 # Setup Agent Docs
 
-Follow `@agents/coding-philosphy.mdc`. This skill defines **where** docs live and **how** to write them—it does not override coding standards.
+Follow `@agents/coding-philosophy.mdc`. This skill defines **where** docs live and **how** to write them—it does not override coding standards.
 
 **Goal:** Agents get durable, low-drift guidance. Humans get a reproducible process for any repo.
 
@@ -20,6 +20,8 @@ Follow `@agents/coding-philosphy.mdc`. This skill defines **where** docs live an
 - New repo needs `AGENTS.md` and `.cursor/rules/`
 - Existing agent docs are stale, duplicated, or bloated
 - User asks to "document this for agents" or audit `AGENTS.md`
+- A structural refactor merged and skills/rules still reference old layout
+- `AGENTS.md` exceeds ~120 lines or contains module/file inventory tables
 
 For large refactors of the codebase itself, run **scope-and-plan** first; use this skill for the documentation deliverable (as a plan increment or standalone).
 
@@ -30,10 +32,44 @@ For large refactors of the codebase itself, run **scope-and-plan** first; use th
 | **User** | `workspace/ai` — `coding-philosophy.mdc`, workflow skills | Cross-repo style, planning workflow, git/PR protocol | Repo architecture, domain model |
 | **Repo canonical** | `AGENTS.md` | Layer concepts, domain rules, opinionated patterns, task routing, anti-patterns | File trees, function catalogs, generic coding advice, user setup |
 | **Repo scoped** | `.cursor/rules/*.mdc` | Edit-time detail for matching globs; thin `architecture.mdc` pointer | Full architecture essay (that's `AGENTS.md`) |
+| **Repo procedures** | `.cursor/skills/` in the repo | Multi-step workflows (onboarding a resource, migrations) | Architecture, invariants |
 | **Deep dive** | e.g. `src/db/README.md` | Schema, ER diagrams, entity relationships | Command behavior, layer boundaries |
 | **User-facing** | `README.md` + command docstrings | Setup, env vars, behavior users and operators see | Architecture, agent conventions |
 
 **One source of truth per fact.** If `api-layer.mdc` lists what belongs in `client.rs`, `AGENTS.md` states the layer split—not the same function list.
+
+## AGENTS.md best practices
+
+### What belongs
+
+- Purpose, layer concepts, domain scope
+- Canonical entry points and concern-based task routing
+- Anti-patterns and copy-paste verify commands
+
+### What does not belong
+
+- Generic style → `coding-philosophy`
+- User setup → `README.md`
+- Module trees / inventory → code + grep
+- Procedures → repo skills
+- Edit-time detail → glob rules
+- Schema ER → deep dive
+
+### Three-layer split
+
+| Layer | Owns | Does not own |
+|-------|------|--------------|
+| `AGENTS.md` | Facts and invariants | Procedures, edit-time detail, inventories |
+| `.cursor/rules/*.mdc` | Scoped how for matching paths | Full architecture essay, multi-step workflows |
+| `.cursor/skills/**` | Multi-step procedures | Architecture, domain invariants |
+
+Link outward; do not copy the same fact across layers.
+
+### Size and drift
+
+Target **~80–120 lines** (~150 max). Every section must answer: *What would an agent do wrong without this?* If grep answers it, delete or move.
+
+After a structural refactor: update skills + glob rules first; trim `AGENTS.md` to decision rules only — do not paste module maps.
 
 ## Workflow
 
@@ -45,6 +81,14 @@ For large refactors of the codebase itself, run **scope-and-plan** first; use th
 - [ ] 5. Add deep dives — only where agents need them (schema, etc.)
 - [ ] 6. Add readme-sync.mdc — if README exists
 - [ ] 7. Audit — checklist below
+```
+
+**Audit/trim after refactor:**
+
+```
+- [ ] Update repo skills + glob rules first (inventory, procedure)
+- [ ] Trim AGENTS.md to decision rules + links
+- [ ] Run audit checklist
 ```
 
 ### 1. Explore
@@ -77,7 +121,7 @@ Present:
 1. **What diverges** — concrete modules/patterns, with brief examples
 2. **Why it matters** — what agents would learn wrong if docs matched today’s code
 3. **Forks** (user picks one):
-   - **Refactor first** — run **scope-and-plan** (then **execute-increment**); bootstrap docs after structure aligns or per plan increment
+   - **Refactor first** — run **scope-and-plan** (then **scope-and-plan Gate D**); bootstrap docs after structure aligns or per plan increment
    - **Document canonical target** — `AGENTS.md` describes the intended boundaries; code may lag (note gaps only if the user asks)
    - **Bootstrap without structural sections** — overview, scope, conventions, running checks only; defer layer/task routing until structure is fixed
    - **Explicit override** — user approves documenting current layout as-is (rare; say why)
@@ -159,6 +203,7 @@ A solid doc set for a layered app often looks like:
 - **Entry points** — one named helper per seam (`api_client()`, `default_for_scope()`, etc.)
 - **Rules** — thin `architecture.mdc` plus glob rules (`api-layer`, `db-layer`, `readme-sync`)
 - **Deep dive** — schema README (or equivalent) when detail would bloat `AGENTS.md`
+- **Skills** — repo procedures for multi-step workflows; `AGENTS.md` links to them instead of inlining steps
 
 If the repo does not yet match this pattern, use step 2 forks — do not shrink the philosophy to fit the code in `AGENTS.md`.
 

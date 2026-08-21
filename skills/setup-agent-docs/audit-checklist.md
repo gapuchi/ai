@@ -20,17 +20,20 @@ Small or flat repos are fine — flag real violations or inconsistency, not miss
 - [ ] User-facing setup only in `README.md` — not `AGENTS.md`
 - [ ] Architecture only in `AGENTS.md` — not `README.md`
 - [ ] Schema/ER detail in deep-dive README — not inlined in `AGENTS.md`
+- [ ] Skills own procedures; `AGENTS.md` links, does not copy steps
+- [ ] Procedures in skills; path-specific how in glob rules
 
 ## Duplication
 
 - [ ] `architecture.mdc` points to `AGENTS.md` — does not restate full layers
 - [ ] Glob rules own edit-time detail — `AGENTS.md` owns concepts, not function catalogs
-- [ ] Same fact not stated in three places (AGENTS + mdc + User Rules)
+- [ ] Same fact not in AGENTS + mdc + skill + User Rules
 - [ ] `Related docs` links outward instead of copying content
 
 ## Drift resistance
 
 - [ ] No module layout file tree
+- [ ] No refactor inventory (module tables mirroring `src/`) in `AGENTS.md`
 - [ ] No tables of every method on a type (link module or let agents grep)
 - [ ] Common tasks table routes by **concern**, not by listing every file
 - [ ] "What not to do" is one consolidated list
@@ -51,5 +54,5 @@ Small or flat repos are fine — flag real violations or inconsistency, not miss
 
 ## Size
 
-- [ ] `AGENTS.md` under ~120 lines unless domain is genuinely complex
-- [ ] Every section answers: "what would an agent do wrong without this?"
+- [ ] `AGENTS.md` under ~120 lines unless domain is genuinely complex (~150 hard max)
+- [ ] Every section answers: "what would an agent do wrong without this?" — not "what did we just build?"

@@ -10,7 +10,7 @@ description: >-
 
 # Scope and Plan
 
-Follow `@agents/coding-philosphy.mdc` for design decisions. This skill adds workflow and gates—it does not override the philosophy.
+Follow `@agents/coding-philosophy.mdc` for design decisions. This skill adds workflow and gates—it does not override the philosophy.
 
 **Hard rule:** No code until **Plan** and **Gate D** are both approved (D assumes Plan is settled).
 
@@ -78,6 +78,12 @@ For each concern, name its canonical owner and entry point. Treat multiple execu
 ### Gate C — Design (required)
 
 B: what and where. C: what shape—abstractions, seams, contracts (interface shape, error model, sync vs async, hard-coded vs pluggable). Same list shape as B. Per item, note **existing code touched** when a decision reshapes or extracts; reshapes feed D's ordering.
+
+For each shared extraction, ask:
+
+- Shared concept or coincidental similarity?
+- If one variant needs a different rule in six months, does the seam break cleanly?
+- Macro/codegen: identical schema, identical semantics, identical lifecycle — if any "no", hand-write.
 
 ### Confirm (B and C)
 

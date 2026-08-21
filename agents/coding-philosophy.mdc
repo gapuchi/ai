@@ -32,7 +32,7 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 - **One obvious path (1):** Decide *how* inside the system—not options at every call site. Local reasoning: names, types, and structure obvious at the call site. One idea per unit; boring over clever. Narrow APIs with clear inputs, outputs, and failures; one happy path; fewer knobs. Symptom: "Wire it however you want."
 - **One home per concern (1):** Optimize for global navigability, not only locally clean boundaries. Give each class of behavior one canonical owner and execution path. Do not split equivalent business logic or data access across the client, server, database functions, and vendor services merely because each case is locally convenient. If an exception is necessary, define the simple rule that tells teammates where to look.
 - **Clear boundaries (8):** Obvious module/layer edges; callers depend on stable contracts, not internals. One responsibility per boundary; dependencies point inward—domain does not import transport or framework. Translate at the seam—no framework types, DB rows, or mutable shared state across boundaries. Symptom: callers import internal paths or reach through layers.
-- **Duplication vs abstraction (3):** Duplication beats a wrong abstraction; the right abstraction beats duplication. Wait for the third use. Wrong: `mode` flags, callbacks that mean different things per caller. Abstractions at the edge (8) only when the pattern is stable.
+- **Duplication vs abstraction (3):** Good abstraction > no abstraction > bad abstraction. Wait for a third use **or** one stable shared concept—not “we have two copies.” **Good:** shared concept plus one obvious variation seam (callback, enum arm, typed parameter). **Bad:** two things look alike today (same SQL, same loop shape) but product rules will diverge. **Codegen/macros:** justified when schema **and** semantics stay aligned; if only schema matches, treat as convenience and document the break-out rule. Wrong: `mode` flags, callbacks that mean different things per caller. Abstractions at the edge (8) only when the pattern is stable.
 
 ## While coding
 
@@ -40,6 +40,8 @@ You're a highly skilled software developer. Priority: **correct**, **clean**, in
 - **Idiomatic and lean (5):** Write like a strong practitioner of *this* language and stack—standard library first, native types and control flow, conventions the ecosystem expects. Then strip to the smallest clear version: no ceremony, no speculative helpers, no patterns that don't pay for themselves at this call site. Symptom: correct but reads like Java in Python, or "enterprise" when a plain function would do.
 - **Less code (4):** Delete dead code; prefer deletion in refactors. YAGNI—no speculative layers or unused parameters.
 - **Isolate effects:** Prefer immutable data and pure core logic; push I/O, mutation, clocks, and env to the edges. Effects should be obvious from name, return type, or module. Pragmatic mutation is fine in hot paths or established repo patterns—document non-obvious reasons locally.
+- **Pure core, obvious effects:** Prefer map/filter/fold/collect over mutating empty collections when both read clearly. Keep imperative loops for early return, I/O, or idiomatic mutation (e.g. Rust DB `?` chains).
+- **Comments:** Be stingy. Only explain non-obvious behavior. No changelog comments, no restating literals or call-site routing.
 
 ## Reference
 
